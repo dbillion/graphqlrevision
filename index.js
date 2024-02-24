@@ -33,7 +33,7 @@ const kourses = [
         price: 599.99,
         discount: false,
         genreId: "cat-01"
-        },
+        }
     ,{
  id: "book-21",
  name: "The Immortals of Meluha",
@@ -103,6 +103,7 @@ const typeDefs = gql`
 
 
  type Course {
+    id: ID!
  name: String!
  description: String!
  price: Float!
@@ -160,8 +161,20 @@ return genre
         isTrainer: () => {
         return true;
         }
-    }
-   }
+    },
+    Genre:{
+        courses: (parent, args, context) => {
+            const genreId = parent.id;
+            return courses.filter(item => item.genreId === 
+           genreId);    }
+},
+    Course: {
+        genre: (parent, args, context) => {
+        const genreId = parent.genreId;
+        return genres.find(item => item.id === genreId);
+        },
+
+   }}
    const server = new ApolloServer({ typeDefs, resolvers })
    server.listen().then(({ url}) => console.log(`Server is running 
    at ${url}`));
